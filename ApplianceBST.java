@@ -4,7 +4,6 @@ public class ApplianceBST {
     public ApplianceBST(){
         head = null;
     }
-
     public void insert(Appliance a){
         if (head == null) head = new Node(a);
 
@@ -25,7 +24,6 @@ public class ApplianceBST {
         return cRoot;
         */
     }
-
     public void remove(Appliance a){
         if(!search(a)) System.err.println("Tree does not contain element:\n"+a);
         else{
@@ -61,17 +59,16 @@ public class ApplianceBST {
                 if (nGParent.value.compareTo(nGNode.value) == -1) nGParent.right = nGNode.right;
                 else nGParent.left = nGNode.left;
             }
+            System.out.println("Successfully removed " + a);
             
 
             
         }
 
     }
-
     public boolean search(Appliance a){
         return searchSubtree(a, head);
     }
-
     private boolean searchSubtree(Appliance a, Node cRoot){
         if (cRoot == null) return false;
         else if (cRoot.value.compareTo(a) == 0) return true;
@@ -79,11 +76,9 @@ public class ApplianceBST {
         else if (a.compareTo(cRoot.value) == 1) return searchSubtree(a, cRoot.right);
         return false;
     }
-
     public Node[] find(Appliance a){
         return findR(a, head, null);
     }
-
     public Node[] findNextGreatest(Node cRoot, Node prev){
         if (cRoot.left == null) return new Node[]{cRoot, prev};
         else return findNextGreatest(cRoot.left, cRoot);
@@ -95,18 +90,8 @@ public class ApplianceBST {
         else if (a.compareTo(cRoot.value) == 1) return findR(a, cRoot.right, cRoot);
         return new Node[] {cRoot, prev};
     }
-    public void printTree(){
-        System.out.println("Tree: ");
-        StrBSTPrinter.printNode(head);
-    }
-    public void printInOrder(){
-        printInOrderR(head);
-    }
-    public void printInOrderR(Node cRoot){
-        if (cRoot == null) return;
-        printInOrderR(cRoot.left);
-        System.out.println(" " + cRoot.value + " ");
-        printInOrderR(cRoot.right);
+    public void print(){
+        Traversals.inOrder(head);
     }
     private int compare(Appliance ap1, Appliance ap2){
         int comparison;
@@ -129,6 +114,7 @@ public class ApplianceBST {
             int char1 = (int)str1.charAt(i);
             int char2 = (int)str2.charAt(i);
             //"if at the end of the loop AND if the string lengths are unequal"
+            //End of the loop is variable, depending on whether str1 or str2 is longer, so a ternary makes sense here
             if(i == ((str1.length() > str2.length()) ? str2.length()-1 : str2.length()-1) && str1.length() != str2.length()){
                 //This means the longer string comes after the shorter string, so return appropriate value
                 return (str1.length() > str2.length()) ? 1 : -1; 
@@ -142,5 +128,35 @@ public class ApplianceBST {
         }
         //If nothing has matched, it means the strings are perfectly equal
         return 0;
+    }
+    public Node getMinimum(){
+        if(head.left != null) return getMinimumR(head.left);
+        return head;
+    }
+    private Node getMinimumR(Node root){
+        if(root.left != null) return getMinimumR(root.left);
+        return root;
+    }
+    public Node getMaximum(){
+        if (head.right != null) return getMaximumR(head.right);
+        return head;
+    }
+    private Node getMaximumR(Node root){
+        if (root.right != null) return getMaximumR(root.right);
+        return root;
+    }
+
+    public int getHeight(){
+        if(head == null) return 0;
+        return getHeightR(head);
+    }
+    private int getHeightR(Node root){
+        if(root == null) return -1;
+        
+        int leftHeight = getHeightR(root.left);
+        int rightHeight = getHeightR(root.right);
+
+        if (leftHeight > rightHeight) return leftHeight + 1;
+        else return rightHeight + 1;
     }
 }

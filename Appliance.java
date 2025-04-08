@@ -25,8 +25,8 @@ public class Appliance {
     public String toString(){
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
         String outString = "";
-        outString+=String.format("%-" + 15 + "s", name) + " | ";
-        outString+=String.format("%-" + 15 + "s", category)+ " | ";
+        outString+=String.format("%-" + 40 + "s", name) + " | ";
+        outString+=String.format("%-" + 20 + "s", category)+ " | ";
         outString+=currencyFormat.format(price);
         return outString;
     }

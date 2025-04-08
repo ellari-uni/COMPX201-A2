@@ -17,8 +17,18 @@ public class Main{
             /*
              * Created Traversal method to view the tree in order, as the StrBSTPrinter was unreadable
              */
-            Traversals.inOrder(aBst);
+            aBst.print();
             System.out.println();
+            System.out.println();
+            System.out.println(aBst.getMinimum().value);
+            System.out.println();
+            System.out.println(aBst.getMaximum().value);
+            System.out.println();
+            System.out.println(aBst.getHeight());
+
+            
+            aBst.print();
+
         }catch (Exception e){
             System.err.println(e.getClass());
             System.err.println(e.getMessage());
