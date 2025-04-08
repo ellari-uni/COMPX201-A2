@@ -8,15 +8,22 @@ public class ApplianceBST {
     public void insert(Appliance a){
         if (head == null) head = new Node(a);
 
-        if (head.value.compareTo(a) == 0) System.err.println("Cannot add duplicate items to the BST. Ignoring element:\n"+a);
+        else if (compare(a, head.value) == 0) System.err.println("Cannot add duplicate items to the BST. Ignoring element:\n"+a+"\n\n");
         else head = insertIntoSubtree(a, head);
     }
     private Node insertIntoSubtree(Appliance a, Node cRoot){
         
         if (cRoot == null) return new Node(a);
+        else if (compare(a, cRoot.value) == -1) cRoot.left = insertIntoSubtree(a, cRoot.left);
+        else if (compare(a, cRoot.value) == 1) cRoot.right = insertIntoSubtree(a, cRoot.right);
+        return cRoot;
+
+        /*
+        if (cRoot == null) return new Node(a);
         else if (a.compareTo(cRoot.value) == -1) cRoot.left = insertIntoSubtree(a, cRoot.left);
         else if (a.compareTo(cRoot.value) == 1) cRoot.right = insertIntoSubtree(a, cRoot.right);
         return cRoot;
+        */
     }
 
     public void remove(Appliance a){
@@ -100,5 +107,40 @@ public class ApplianceBST {
         printInOrderR(cRoot.left);
         System.out.println(" " + cRoot.value + " ");
         printInOrderR(cRoot.right);
+    }
+    private int compare(Appliance ap1, Appliance ap2){
+        int comparison;
+        if((comparison = compare(ap1.getCategory(), ap2.getCategory())) != 0){
+            return comparison;
+        }
+        else if((ap1.getPrice() != ap2.getPrice())){
+            return (ap1.getPrice() < ap2.getPrice()) ? -1 : 1;
+        }
+        else if((comparison = compare(ap1.getName(), ap2.getName())) != 0){
+            return comparison;
+        }
+        return 0;
+    }
+    private int compare(String str1, String str2){
+        //Iterate through strings
+        //Iteration limit is the maximum index of the smallest string (if equal, string 2)
+        for(int i = 0; i < ((str1.length() > str2.length()) ? str2.length()-1 : str2.length()-1); i++){
+            //Cast both characters into their ASCII codes for easy comparison
+            int char1 = (int)str1.charAt(i);
+            int char2 = (int)str2.charAt(i);
+            //"if at the end of the loop AND if the string lengths are unequal"
+            if(i == ((str1.length() > str2.length()) ? str2.length()-1 : str2.length()-1) && str1.length() != str2.length()){
+                //This means the longer string comes after the shorter string, so return appropriate value
+                return (str1.length() > str2.length()) ? 1 : -1; 
+            }
+            //If the characters are the same, then continue to the next character
+            if(char1 == char2) continue;
+            
+            //If character in string 1 comes before character in string 2, return -1, else return 1
+            if(char1 < char2) return -1;
+            else return 1;
+        }
+        //If nothing has matched, it means the strings are perfectly equal
+        return 0;
     }
 }
