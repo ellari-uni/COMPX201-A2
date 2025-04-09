@@ -16,22 +16,7 @@ public class ApplianceBST {
         else if (compare(a, cRoot.value) == -1) cRoot.left = insertIntoSubtree(a, cRoot.left);
         else if (compare(a, cRoot.value) == 1) cRoot.right = insertIntoSubtree(a, cRoot.right);
         return cRoot;
-
-        /*
-        if (cRoot == null) return new Node(a);
-        else if (a.compareTo(cRoot.value) == -1) cRoot.left = insertIntoSubtree(a, cRoot.left);
-        else if (a.compareTo(cRoot.value) == 1) cRoot.right = insertIntoSubtree(a, cRoot.right);
-        return cRoot;
-        */
     }
-    
-    public void remove(Appliance a){
-        String name = a.getName();
-
-        
-    }
-    
-    /*
     public void remove(Appliance a){
         if(!search(a)) System.err.println("Tree does not contain element:\n"+a);
         else{
@@ -74,7 +59,7 @@ public class ApplianceBST {
         }
 
     }
-    */
+    
     public boolean search(Appliance a){
         return searchSubtree(a, head);
     }
