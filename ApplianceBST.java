@@ -24,6 +24,14 @@ public class ApplianceBST {
         return cRoot;
         */
     }
+    
+    public void remove(Appliance a){
+        String name = a.getName();
+
+        
+    }
+    
+    /*
     public void remove(Appliance a){
         if(!search(a)) System.err.println("Tree does not contain element:\n"+a);
         else{
@@ -66,6 +74,7 @@ public class ApplianceBST {
         }
 
     }
+    */
     public boolean search(Appliance a){
         return searchSubtree(a, head);
     }
