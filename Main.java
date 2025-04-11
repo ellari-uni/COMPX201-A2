@@ -20,8 +20,16 @@ public class Main{
             //StrBSTPrinter.printNode(aBst.head);
             aBst.print();
             //System.out.println();
-            aBst.printCategory("Refrigerator");
-
+            //aBst.printCategory("Refrigerator");
+            System.out.println();
+            Node missing = aBst.find(new Appliance("Samsung Bespoke Refrigerator", "Refrigerator", 2199.99f))[0];
+            
+            System.out.println("**** MISSING ****");
+            System.out.println(missing.value);
+            System.out.println(missing.left==null ? "null" : missing.left.value);
+            System.out.println(missing.right == null ? "null" : missing.right.value);
+            System.out.println("*****************");
+            
             /*
             System.out.println();
             System.out.println();

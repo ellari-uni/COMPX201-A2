@@ -67,7 +67,7 @@ public class ApplianceBST {
                     }
                 }
             }
-            System.out.println("Node value: \n" + ins.value + "\nNode left value: \n" + (ins.left==null?"null":ins.left.value) + "\nNode right value: \n" + (ins.right == null ? "null" : ins.right.value) + "\n");
+            //System.out.println("Node value: \n" + ins.value + "\nNode left value: \n" + (ins.left==null?"null":ins.left.value) + "\nNode right value: \n" + (ins.right == null ? "null" : ins.right.value) + "\n");
             return ins;
         }
         catch (Exception e){
@@ -168,9 +168,9 @@ public class ApplianceBST {
     private void inOrderCatR(Node n, String c){
         if(compare(n.value.getCategory(), c) != 0) return;
         else{
-            System.out.println("#### " + n.value + " ####");
-            System.out.println("#### " + (n.left == null ? "null" : n.left.value) + " ####");
-            System.out.println("#### " + (n.right == null ? "null" : n.right.value) + " ####");
+            //System.out.println("#### " + n.value + " ####");
+            //System.out.println("#### " + (n.left == null ? "null" : n.left.value) + " ####");
+            //System.out.println("#### " + (n.right == null ? "null" : n.right.value) + " ####");
             
         }
         if(n.left!=null) inOrderCatR(n.left, c);
