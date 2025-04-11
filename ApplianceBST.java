@@ -4,11 +4,39 @@ public class ApplianceBST {
     public ApplianceBST(){
         head = null;
     }
+    public ApplianceBST(Node n){
+        head = n;
+    }
+    
+    
     public void insert(Appliance a){
         if (head == null) head = new Node(a);
+        else{
+            Node searchedNode = searchUpToCat(a.getCategory(), head);
+            Node search = (searchedNode == null) ? head : searchedNode;
+            
 
-        else if (compare(a, head.value) == 0) System.err.println("Cannot add duplicate items to the BST. Ignoring element:\n"+a+"\n\n");
-        else head = insertIntoSubtree(a, head);
+        }
+    }
+    
+    
+    
+    
+    
+    public void iinsert(Appliance a){
+        Node start = null;
+        if (head!=null){
+            Node search = searchUpToCat(a.getCategory(), head);
+            start = search==null ? head : search;
+        }
+        else{
+            start = head;
+        }
+
+        if (start == null) start = new Node(a);
+        
+        else if (compare(a, start.value) == 0) System.err.println("Cannot add duplicate items to the BST. Ignoring element:\n"+a+"\n\n");
+        else start = insertIntoSubtree(a, start);
     }
     private Node insertIntoSubtree(Appliance a, Node cRoot){
         
@@ -70,6 +98,56 @@ public class ApplianceBST {
         else if (a.compareTo(cRoot.value) == 1) return searchSubtree(a, cRoot.right);
         return false;
     }
+
+    public void printCategory(String c){
+        Node startNode = searchUpToCat(c, head);
+        System.out.println(startNode.value + " <- searchRoot");
+        //Traversals.preOrder(startNode);
+        System.out.println();
+        inOrderCat(startNode, c);
+    }
+    private void inOrderCat(Node start, String c){
+        inOrderCatR(start, c);
+    }
+    private void inOrderCatR(Node n, String c){
+        if(compare(n.value.getCategory(), c) != 0) return;
+        else{
+            System.out.println("#### " + n.value + " ####");
+            System.out.println("#### " + n.left.value + " ####");
+            System.out.println("#### " + n.right.value + " ####");
+            
+        }
+        if(n.left!=null) inOrderCatR(n.left, c);
+        if(compare(n.value.getCategory(), c) == 0) System.out.println(n.value);
+        if(n.right!=null) inOrderCatR(n.right, c);
+        /*
+        if ((n.left != null && compare(n.left.value.getCategory(), c) == 0)
+         || 
+        (n.right!=null && compare(n.right.value.getCategory(), c) == 0))
+
+        {
+            if(n.left != null) inOrderCatR(n.left,c);
+            if (compare(n.value.getCategory(),c)==0)System.out.println(n.value);
+            if(n.right!=null) inOrderCatR(n.right,c);
+        }
+        else{
+            return;
+        }
+        */
+    }
+    private Node searchUpToCat(String cat, Node root){
+        try{
+            if(compare(root.value.getCategory(), cat) == 0) return root;
+            else if (root.left!=null && (compare(root.value.getCategory(), cat) == 1)) return searchUpToCat(cat, root.left);
+            else if (root.right!=null && (compare(root.value.getCategory(), cat) == -1))return searchUpToCat(cat, root.right);
+            else throw new Exception("Reached unintended area of code. Review code and try again");
+        }catch(Exception e){
+            e.printStackTrace();
+            System.err.println(e.getMessage()+"\nNode cat: " + " Search cat: " + cat);
+            return null;
+        }
+    }
+
     public Node[] find(Appliance a){
         return findR(a, head, null);
     }

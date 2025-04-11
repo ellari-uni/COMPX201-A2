@@ -6,7 +6,7 @@ public class Main{
         ApplianceBST aBst = new ApplianceBST();
 
         //try (BufferedReader br = new BufferedReader(new FileReader("appliances.csv"))) {
-        try (BufferedReader br = new BufferedReader(new FileReader("appliancesShort.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("appliances.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.contains("Appliance Name")) continue;
@@ -19,6 +19,10 @@ public class Main{
              */
             aBst.print();
             System.out.println();
+            aBst.printCategory("Oven");
+
+            /*
+            System.out.println();
             System.out.println();
             System.out.println(aBst.getMinimum().value);
             System.out.println();
@@ -27,10 +31,11 @@ public class Main{
             System.out.println(aBst.getHeight());
             aBst.remove(new Appliance("Whirlpool Top Freezer Refrigerator", "Refrigerator", 899.99f));
             aBst.print();
-
+            */
 
         }catch (Exception e){
             System.err.println(e.getClass());
+            e.printStackTrace();
             System.err.println(e.getMessage());
         }
     }
