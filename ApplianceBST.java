@@ -8,99 +8,38 @@ public class ApplianceBST {
         head = n;
     }
     
-    
-    public void insert(Appliance a){
-        if (head == null) head = new Node(a);
-        else{
-            Node originSearch = searchUpToCat(a.getCategory(), head);
-            Node search = (originSearch == null) ? head : originSearch;
-            
-            if(search != head) search = insertIntoTree(search, new Node(a));
-            else iinsert(a);
-
-        }
+    public void insert(Appliance n){
+        head = insertIntoSubtree(n, head);
     }
-    private Node insertIntoTree(Node searched, Node ins){
-        Node curr = searched;
-        Node prev = null;
-
-        //if (search(ins.value)) return;
-        try{
-            while(
-                !((curr.left != null && compare(curr.left.value, ins.value) == -1) && (curr.right != null && compare(curr.right.value, ins.value) == 1)))         
-            {
-                if(curr.right != null && compare(curr.value, curr.right.value) == 1) {
-                    prev = curr;
-                    curr = curr.right;
-                }
-                else if (curr.left!=null && compare(curr.value, curr.left.value) == -1){
-                    prev = curr;
-                    curr = curr.left;
-                }
-                else if (curr.left == null && curr.right == null){
+    protected Node insertIntoSubtree(Appliance n, Node cRoot){
+        if(cRoot == null) return new Node(n);
+        else{
+            switch(compare(n, cRoot.value)){
+                case 1:
+                    cRoot.left = insertIntoSubtree(n, cRoot.left);
                     break;
-                }
-                else {
-                    throw new Exception("No Duplicates allowed in BST: Element could not be inserted");
-                }
-            }
-            System.out.println("WOOO");
-            if(compare(ins.value, curr.value) == 1){
-                ins.left = curr;
-                if(prev != null){
-                    if(compare(prev.value, curr.value) == 1){
-                        prev.left = ins;
-                    }
-                    else{
-                        prev.right = ins;
-                    }
-                }
-            }
-            else{
-                ins.right = curr;
-                if(prev != null){
-                    if(compare(prev.value, curr.value) == 1){
-                        prev.left = ins;
-                    }
-                    else{
-                        prev.right = ins;
-                    }
-                }
-            }
-            System.out.println("Node value: \n" + ins.value + "\nNode left value: \n" + (ins.left==null?"null":ins.left.value) + "\nNode right value: \n" + (ins.right == null ? "null" : ins.right.value) + "\n");
-            return ins;
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            return null;
-        }
-    }
-    
-    
-    
-    
-    public void iinsert(Appliance a){
-        Node start = null;
-        if (head!=null){
-            Node search = searchUpToCat(a.getCategory(), head);
-            start = search==null ? head : search;
-        }
-        else{
-            start = head;
-        }
+                case -1:
+                    cRoot.right = insertIntoSubtree(n, cRoot.right);
+                    break;
+                case -2, -3:
+                    
 
-        if (start == null) start = new Node(a);
+
+            }
+        }
         
-        else if (compare(a, start.value) == 0) System.err.println("Cannot add duplicate items to the BST. Ignoring element:\n"+a+"\n\n");
-        else start = insertIntoSubtree(a, start);
-    }
-    private Node insertIntoSubtree(Appliance a, Node cRoot){
         
-        if (cRoot == null) return new Node(a);
-        else if (compare(a, cRoot.value) == -1) cRoot.left = insertIntoSubtree(a, cRoot.left);
-        else if (compare(a, cRoot.value) == 1) cRoot.right = insertIntoSubtree(a, cRoot.right);
+        /*
+        else if (compare(n, cRoot.value) == -1) {
+            cRoot.left = insertIntoSubtree(n, cRoot.left);
+        }
+        else if (compare(n, cRoot.value) == 1) {
+            cRoot.right = insertIntoSubtree(n, cRoot.right);
+        }
         return cRoot;
+        */
     }
+
     public void remove(Appliance a){
         if(!search(a)) System.err.println("Tree does not contain element:\n"+a);
         else{
@@ -156,12 +95,43 @@ public class ApplianceBST {
     }
 
     public void printCategory(String c){
-        Node startNode = searchUpToCat(c, head);
-        System.out.println(startNode.value + " <- searchRoot");
-        //Traversals.preOrder(startNode);
-        System.out.println();
-        inOrderCat(startNode, c);
+        Node start = findCat(c);
+        if (start == null) System.out.println("\nNo objects of specified category \"" + c + "\" in the tree.");
+        else{
+            Traversals.inOrder(start, c);
+        }
+
+
+        // Node startNode = searchUpToCat(c, head);
+        // System.out.println(startNode.value + " <- searchRoot");
+        // // Traversals.preOrder(startNode);
+        // System.out.println();
+        // inOrderCat(startNode, c);
     }
+    private Node findCat(String c){
+        Node current = head;
+        while(compare(c, current.value.getCategory()) != 0){
+            System.out.println("Current value cat: " + current.value.getCategory());
+            System.out.println("Searching value cat: " + c);
+            System.out.println("Comparison 1 results: " + compare(c, current.value.getCategory()));
+            System.out.println();
+            if(compare(c, current.value.getCategory()) == -1){
+                if (current.left == null) return null;
+                else current = current.left;
+            }
+            else if(compare(c, current.value.getCategory()) == 1){
+                if (current.right == null) return null;
+                else current = current.right;
+            }
+        }
+
+        System.out.println("reached");
+        if (compare(current.value, head.value) == 0 && compare(c, current.value.getCategory()) != 0) return null;
+        else return current;
+    }
+
+
+
     private void inOrderCat(Node start, String c){
         inOrderCatR(start, c);
     }
@@ -229,22 +199,22 @@ public class ApplianceBST {
         return new Node[] {cRoot, prev};
     }
     public void print(){
-        Traversals.inOrder(head);
+        Traversals.inOrder(head, null);
     }
-    private int compare(Appliance ap1, Appliance ap2){
+    public static int compare(Appliance ap1, Appliance ap2){
         int comparison;
         if((comparison = compare(ap1.getCategory(), ap2.getCategory())) != 0){
             return comparison;
         }
         else if((ap1.getPrice() != ap2.getPrice())){
-            return (ap1.getPrice() < ap2.getPrice()) ? -1 : 1;
+            return (ap1.getPrice() < ap2.getPrice()) ? -3 : 3;
         }
         else if((comparison = compare(ap1.getName(), ap2.getName())) != 0){
-            return comparison;
+            return comparison*2;
         }
         return 0;
     }
-    private int compare(String str1, String str2){
+    public static int compare(String str1, String str2){
         //Iterate through strings
         //Iteration limit is the maximum index of the smallest string (if equal, string 2)
         for(int i = 0; i < ((str1.length() > str2.length()) ? str2.length()-1 : str2.length()-1); i++){

@@ -17,9 +17,9 @@ public class Main{
             /*
              * Created Traversal method to view the tree in order, as the StrBSTPrinter was unreadable
              */
-            //StrBSTPrinter.printNode(aBst.head);
-            aBst.print();
+            //aBst.print();
             //System.out.println();
+            Traversals.preOrder(aBst);
             aBst.printCategory("Refrigerator");
 
             /*
