@@ -15,7 +15,7 @@ public class ApplianceBST {
             Node originSearch = searchUpToCat(a.getCategory(), head);
             Node search = (originSearch == null) ? head : originSearch;
             
-            if(search.value.getCategory() == a.getCategory()) search = insertIntoTree(search, new Node(a));
+            if(search != head) search = insertIntoTree(search, new Node(a));
             else iinsert(a);
 
         }
@@ -194,12 +194,17 @@ public class ApplianceBST {
     private Node searchUpToCat(String cat, Node root){
         try{
             if(compare(root.value.getCategory(), cat) == 0) return root;
-            else if (root.left!=null && (compare(root.value.getCategory(), cat) == 1)) {
+            else if ((compare(root.value.getCategory(), cat) == 1)) {
                 //
-                return searchUpToCat(cat, root.left);
+                if (root.left != null) return searchUpToCat(cat, root.left);
+                else return root;
             }
-            else if (root.right!=null && (compare(root.value.getCategory(), cat) == -1))return searchUpToCat(cat, root.right);
-            else {
+            else if ((compare(root.value.getCategory(), cat) == -1)){
+                if (root.right != null) return searchUpToCat(cat, root.right);
+                else return root;
+            }
+            else{
+                System.out.println("test");
                 return null;
             }
         }catch(Exception e){
