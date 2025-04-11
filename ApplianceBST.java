@@ -9,218 +9,87 @@ public class ApplianceBST {
     }
     
     
-    public void insert(Appliance a){
-        if (head == null) head = new Node(a);
-        else{
-            Node originSearch = searchUpToCat(a.getCategory(), head);
-            Node search = (originSearch == null) ? head : originSearch;
-            
-            if(search != head) search = insertIntoTree(search, new Node(a));
-            else iinsert(a);
-
-        }
-    }
-    private Node insertIntoTree(Node searched, Node ins){
-        Node curr = searched;
-        Node prev = null;
-
-        //if (search(ins.value)) return;
-        try{
-            while(
-                !((curr.left != null && compare(curr.left.value, ins.value) == -1) && (curr.right != null && compare(curr.right.value, ins.value) == 1)))         
-            {
-                if(curr.right != null && compare(curr.value, curr.right.value) == 1) {
-                    prev = curr;
-                    curr = curr.right;
-                }
-                else if (curr.left!=null && compare(curr.value, curr.left.value) == -1){
-                    prev = curr;
-                    curr = curr.left;
-                }
-                else if (curr.left == null && curr.right == null){
-                    break;
-                }
-                else {
-                    throw new Exception("No Duplicates allowed in BST: Element could not be inserted");
-                }
-            }
-            System.out.println("WOOO");
-            if(compare(ins.value, curr.value) == 1){
-                ins.left = curr;
-                if(prev != null){
-                    if(compare(prev.value, curr.value) == 1){
-                        prev.left = ins;
-                    }
-                    else{
-                        prev.right = ins;
-                    }
-                }
-            }
-            else{
-                ins.right = curr;
-                if(prev != null){
-                    if(compare(prev.value, curr.value) == 1){
-                        prev.left = ins;
-                    }
-                    else{
-                        prev.right = ins;
-                    }
-                }
-            }
-            //System.out.println("Node value: \n" + ins.value + "\nNode left value: \n" + (ins.left==null?"null":ins.left.value) + "\nNode right value: \n" + (ins.right == null ? "null" : ins.right.value) + "\n");
-            return ins;
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            return null;
-        }
+    public void insert(Appliance a) {
+        head = insertRecursive(head, new Node(a));
     }
     
+
+    private Node insertRecursive(Node current, Node newNode) {
+        if (current == null) return newNode;
     
+        int cmp = compare(newNode.value, current.value);
     
+        if (cmp < 0) {
+            current.left = insertRecursive(current.left, newNode);
+        } else if (cmp > 0) {
+            current.right = insertRecursive(current.right, newNode);
+        } else {
+            System.err.println("Duplicate not inserted: \n" + newNode.value + "\n");
+        }
     
-    public void iinsert(Appliance a){
-        Node start = null;
-        if (head!=null){
-            Node search = searchUpToCat(a.getCategory(), head);
-            start = search==null ? head : search;
-        }
-        else{
-            start = head;
-        }
-
-        if (start == null) start = new Node(a);
-        
-        else if (compare(a, start.value) == 0) System.err.println("Cannot add duplicate items to the BST. Ignoring element:\n"+a+"\n\n");
-        else start = insertIntoSubtree(a, start);
-    }
-    private Node insertIntoSubtree(Appliance a, Node cRoot){
-        
-        if (cRoot == null) return new Node(a);
-        else if (compare(a, cRoot.value) == -1) cRoot.left = insertIntoSubtree(a, cRoot.left);
-        else if (compare(a, cRoot.value) == 1) cRoot.right = insertIntoSubtree(a, cRoot.right);
-        return cRoot;
-    }
-    public void remove(Appliance a){
-        if(!search(a)) System.err.println("Tree does not contain element:\n"+a);
-        else{
-            Node[] searchRes = find(a);
-            Node nodeRem = searchRes[0];
-            Node prevNode = searchRes[1];
-            int checkChildren = nodeRem.identifyWhichNull();
-
-            if(nodeRem.isLeaf()){
-                if (prevNode.value.compareTo(nodeRem.value) == -1) prevNode.right = null;
-                else prevNode.left = null;
-            }
-            else if(checkChildren>0){
-                switch(checkChildren){
-                    case 1:
-                        if (prevNode.value.compareTo(nodeRem.value) == -1) prevNode.right = nodeRem.right;
-                        else prevNode.left = nodeRem.right;
-                        break;
-                    case 2:
-                        if (prevNode.value.compareTo(nodeRem.value) == -1) prevNode.right = nodeRem.left;
-                        else prevNode.left = nodeRem.left;
-                        break;
-                }
-            }
-            else if(checkChildren==0){
-                Node[] greatestResults = findNextGreatest(nodeRem.right, prevNode);
-                Node nGNode = greatestResults[0];
-                Node nGParent = greatestResults[1];
-                if (prevNode.value.compareTo(nodeRem.value) == -1) prevNode.right = nodeRem.right;
-                else prevNode.left = nodeRem.right;
-
-
-                if (nGParent.value.compareTo(nGNode.value) == -1) nGParent.right = nGNode.right;
-                else nGParent.left = nGNode.left;
-            }
-            System.out.println("Successfully removed " + a);
-            
-
-            
-        }
-
+        return current;
     }
     
-    public boolean search(Appliance a){
-        return searchSubtree(a, head);
-    }
-    private boolean searchSubtree(Appliance a, Node cRoot){
-        if (cRoot == null) return false;
-        else if (cRoot.value.compareTo(a) == 0) return true;
-        else if (a.compareTo(cRoot.value) == -1) return searchSubtree(a, cRoot.left);
-        else if (a.compareTo(cRoot.value) == 1) return searchSubtree(a, cRoot.right);
-        return false;
+
+    public void remove(Appliance a) {
+        head = removeR(head, a);
     }
 
-    public void printCategory(String c){
-        Node startNode = searchUpToCat(c, head);
-        System.out.println(startNode.value + " <- searchRoot");
-        //Traversals.preOrder(startNode);
-        System.out.println();
-        inOrderCat(startNode, c);
-    }
-    private void inOrderCat(Node start, String c){
-        inOrderCatR(start, c);
-    }
-    private void inOrderCatR(Node n, String c){
-        if(compare(n.value.getCategory(), c) != 0) return;
-        else{
-            //System.out.println("#### " + n.value + " ####");
-            //System.out.println("#### " + (n.left == null ? "null" : n.left.value) + " ####");
-            //System.out.println("#### " + (n.right == null ? "null" : n.right.value) + " ####");
-            
-        }
-        if(n.left!=null) inOrderCatR(n.left, c);
-        if(compare(n.value.getCategory(), c) == 0) System.out.println(n.value);
-        if(n.right!=null) inOrderCatR(n.right, c);
-        /*
-        if ((n.left != null && compare(n.left.value.getCategory(), c) == 0)
-         || 
-        (n.right!=null && compare(n.right.value.getCategory(), c) == 0))
-
-        {
-            if(n.left != null) inOrderCatR(n.left,c);
-            if (compare(n.value.getCategory(),c)==0)System.out.println(n.value);
-            if(n.right!=null) inOrderCatR(n.right,c);
-        }
-        else{
-            return;
-        }
-        */
-    }
-    private Node searchUpToCat(String cat, Node root){
-        try{
-            if(compare(root.value.getCategory(), cat) == 0) return root;
-            else if ((compare(root.value.getCategory(), cat) == 1)) {
-                //
-                if (root.left != null) return searchUpToCat(cat, root.left);
-                else return root;
-            }
-            else if ((compare(root.value.getCategory(), cat) == -1)){
-                if (root.right != null) return searchUpToCat(cat, root.right);
-                else return root;
-            }
-            else{
-                System.out.println("test");
+    
+    private Node removeR(Node current, Appliance a) {
+        if (current == null) return null;
+    
+        int cmp = compare(a, current.value);
+    
+        if (cmp < 0) {
+            current.left = removeR(current.left, a);
+        } else if (cmp > 0) {
+            current.right = removeR(current.right, a);
+        } else {
+            // Node found
+            if (current.left == null && current.right == null) {
                 return null;
+            } else if (current.left == null) {
+                return current.right;
+            } else if (current.right == null) {
+                return current.left;
+            } else {
+                Node minNode = getMinimumNode(current.right);
+                current.value = minNode.value;
+                current.right = removeR(current.right, minNode.value);
             }
-        }catch(Exception e){
-            e.printStackTrace();
-            System.err.println(e.getMessage()+"\nNode cat: " + " Search cat: " + cat);
-            return null;
         }
+    
+        return current;
     }
+    
+
+    public boolean search(Appliance a) {
+        return searchR(a, head);
+    }
+    
+
+    private boolean searchR(Appliance a, Node current) {
+        if (current == null) return false;
+    
+        int cmp = compare(a, current.value);
+        if (cmp == 0) return true;
+        else if (cmp < 0) return searchR(a, current.left);
+        else return searchR(a, current.right);
+    }
+    
 
     public Node[] find(Appliance a){
         return findR(a, head, null);
     }
+    
+    
     public Node[] findNextGreatest(Node cRoot, Node prev){
         if (cRoot.left == null) return new Node[]{cRoot, prev};
         else return findNextGreatest(cRoot.left, cRoot);
     }
+    
+    
     private Node[] findR(Appliance a, Node cRoot, Node prev){
         if (cRoot == null) return new Node[]{cRoot, prev};
         else if (cRoot.value.compareTo(a) == 0) return new Node[]{cRoot, prev};
@@ -228,9 +97,13 @@ public class ApplianceBST {
         else if (a.compareTo(cRoot.value) == 1) return findR(a, cRoot.right, cRoot);
         return new Node[] {cRoot, prev};
     }
+    
+    
     public void print(){
-        Traversals.inOrder(head);
+        PrintMethods.inOrder(head);
     }
+    
+    
     private int compare(Appliance ap1, Appliance ap2){
         int comparison;
         if((comparison = compare(ap1.getCategory(), ap2.getCategory())) != 0){
@@ -244,6 +117,8 @@ public class ApplianceBST {
         }
         return 0;
     }
+    
+    
     private int compare(String str1, String str2){
         //Iterate through strings
         //Iteration limit is the maximum index of the smallest string (if equal, string 2)
@@ -267,34 +142,42 @@ public class ApplianceBST {
         //If nothing has matched, it means the strings are perfectly equal
         return 0;
     }
-    public Node getMinimum(){
-        if(head.left != null) return getMinimumR(head.left);
-        return head;
+    
+    
+    public Node getMinimum() {
+        return getMinimumNode(head);
     }
-    private Node getMinimumR(Node root){
-        if(root.left != null) return getMinimumR(root.left);
-        return root;
+    
+    
+    private Node getMinimumNode(Node node) {
+        if (node == null || node.left == null) return node;
+        return getMinimumNode(node.left);
     }
-    public Node getMaximum(){
-        if (head.right != null) return getMaximumR(head.right);
-        return head;
+    
+    
+    public Node getMaximum() {
+        return getMaximumNode(head);
     }
-    private Node getMaximumR(Node root){
-        if (root.right != null) return getMaximumR(root.right);
-        return root;
+    
+    
+    private Node getMaximumNode(Node node) {
+        if (node == null || node.right == null) return node;
+        return getMaximumNode(node.right);
     }
-
-    public int getHeight(){
-        if(head == null) return 0;
+    
+    
+    public int getHeight() {
         return getHeightR(head);
     }
-    private int getHeightR(Node root){
-        if(root == null) return -1;
-        
-        int leftHeight = getHeightR(root.left);
-        int rightHeight = getHeightR(root.right);
-
-        if (leftHeight > rightHeight) return leftHeight + 1;
-        else return rightHeight + 1;
+    
+    
+    private int getHeightR(Node node) {
+        if (node == null) return -1;
+    
+        int leftHeight = getHeightR(node.left);
+        int rightHeight = getHeightR(node.right);
+    
+        return Math.max(leftHeight, rightHeight) + 1;
     }
+    
 }
