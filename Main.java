@@ -19,9 +19,15 @@ public class Main{
              */
             //aBst.print();
             //System.out.println();
+<<<<<<< HEAD
             Traversals.preOrder(aBst);
             aBst.printCategory("Refrigerator");
 
+=======
+            PrintMethods.printCategory(aBst, "Refrigerator");
+            
+            
+>>>>>>> 2-insert-function-working-incorrectly
             /*
             System.out.println();
             System.out.println();
