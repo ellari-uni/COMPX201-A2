@@ -12,13 +12,69 @@ public class ApplianceBST {
     public void insert(Appliance a){
         if (head == null) head = new Node(a);
         else{
-            Node searchedNode = searchUpToCat(a.getCategory(), head);
-            Node search = (searchedNode == null) ? head : searchedNode;
+            Node originSearch = searchUpToCat(a.getCategory(), head);
+            Node search = (originSearch == null) ? head : originSearch;
             
+            if(search.value.getCategory() == a.getCategory()) search = insertIntoTree(search, new Node(a));
+            else iinsert(a);
 
         }
     }
-    
+    private Node insertIntoTree(Node searched, Node ins){
+        Node curr = searched;
+        Node prev = null;
+
+        //if (search(ins.value)) return;
+        try{
+            while(
+                !((curr.left != null && compare(curr.left.value, ins.value) == -1) && (curr.right != null && compare(curr.right.value, ins.value) == 1)))         
+            {
+                if(curr.right != null && compare(curr.value, curr.right.value) == 1) {
+                    prev = curr;
+                    curr = curr.right;
+                }
+                else if (curr.left!=null && compare(curr.value, curr.left.value) == -1){
+                    prev = curr;
+                    curr = curr.left;
+                }
+                else if (curr.left == null && curr.right == null){
+                    break;
+                }
+                else {
+                    throw new Exception("No Duplicates allowed in BST: Element could not be inserted");
+                }
+            }
+            System.out.println("WOOO");
+            if(compare(ins.value, curr.value) == 1){
+                ins.left = curr;
+                if(prev != null){
+                    if(compare(prev.value, curr.value) == 1){
+                        prev.left = ins;
+                    }
+                    else{
+                        prev.right = ins;
+                    }
+                }
+            }
+            else{
+                ins.right = curr;
+                if(prev != null){
+                    if(compare(prev.value, curr.value) == 1){
+                        prev.left = ins;
+                    }
+                    else{
+                        prev.right = ins;
+                    }
+                }
+            }
+            System.out.println("Node value: \n" + ins.value + "\nNode left value: \n" + (ins.left==null?"null":ins.left.value) + "\nNode right value: \n" + (ins.right == null ? "null" : ins.right.value) + "\n");
+            return ins;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
     
     
     
@@ -113,8 +169,8 @@ public class ApplianceBST {
         if(compare(n.value.getCategory(), c) != 0) return;
         else{
             System.out.println("#### " + n.value + " ####");
-            System.out.println("#### " + n.left.value + " ####");
-            System.out.println("#### " + n.right.value + " ####");
+            System.out.println("#### " + (n.left == null ? "null" : n.left.value) + " ####");
+            System.out.println("#### " + (n.right == null ? "null" : n.right.value) + " ####");
             
         }
         if(n.left!=null) inOrderCatR(n.left, c);
@@ -138,9 +194,14 @@ public class ApplianceBST {
     private Node searchUpToCat(String cat, Node root){
         try{
             if(compare(root.value.getCategory(), cat) == 0) return root;
-            else if (root.left!=null && (compare(root.value.getCategory(), cat) == 1)) return searchUpToCat(cat, root.left);
+            else if (root.left!=null && (compare(root.value.getCategory(), cat) == 1)) {
+                //
+                return searchUpToCat(cat, root.left);
+            }
             else if (root.right!=null && (compare(root.value.getCategory(), cat) == -1))return searchUpToCat(cat, root.right);
-            else throw new Exception("Reached unintended area of code. Review code and try again");
+            else {
+                return null;
+            }
         }catch(Exception e){
             e.printStackTrace();
             System.err.println(e.getMessage()+"\nNode cat: " + " Search cat: " + cat);

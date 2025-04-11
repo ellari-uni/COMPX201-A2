@@ -6,7 +6,7 @@ public class Main{
         ApplianceBST aBst = new ApplianceBST();
 
         //try (BufferedReader br = new BufferedReader(new FileReader("appliances.csv"))) {
-        try (BufferedReader br = new BufferedReader(new FileReader("appliances.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("appliancesShort.csv"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.contains("Appliance Name")) continue;
@@ -18,8 +18,8 @@ public class Main{
              * Created Traversal method to view the tree in order, as the StrBSTPrinter was unreadable
              */
             aBst.print();
-            System.out.println();
-            aBst.printCategory("Oven");
+            //System.out.println();
+            aBst.printCategory("Refrigerator");
 
             /*
             System.out.println();
